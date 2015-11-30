@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section id="one">
+	<header class="major">
+		<h2>{{ blog.title }}</h2>
+	</header>
+	<h5>发表于{{ blog.created_date }}</h5>
+	<p>{{ blog.text|linebreaks }}</p>
+</section>
+
+<section>
+	<form method="post" action="{% url "myblog.views.blog_detail" pk=blog.id %}">
+		{% csrf_token %}
+		
+		{% for item in form %}
+		<div class="row uniform 50%">
+			<div class="12u">
+				{{item}}
+			</div>
+			<div class="col-md-offset-1 col-md-10">
+				{{item.errors}} {{error_msg}}
+			</div>
+		</div>
+		{% endfor %}
+		<div class="12u$">
+			<ul class="actions">
+				<li><input type="submit" value="Send Message" class="button small" /></li>
+				<li><input type="reset" value="Reset" class="button small" /></li>
+			</ul>
+		</div>
+	</form>
+</section>
+
+<section>
+	{% for comment in blog.comments.all %}
+	<ul class="labeled-icons">
+		<li>
+			<h5>{{ comment.username }}:
+				{{ comment.text }}<br> </h5>
+			<h6>{{ comment.created_date|date:"Y.m.d  H:i" }}</h6>
+		</li>
+	</ul>
+	{% endfor %}
+</section>
+{% endblock %}
